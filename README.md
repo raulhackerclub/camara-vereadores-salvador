@@ -4,4 +4,8 @@ Atualmente, estamos fazendo web-scrapping do portal da Câmara de Vereadores, au
 http://www.cms.ba.gov.br/despesa.aspx  
 
 ## Web-scrapping
-Fizemos tentativas iniciais com RSelenium.  
+Fizemos tentativas iniciais com RSelenium, sem resultados ainda.  
+## OSB
+Recebemos o George, da OSB de SAJ-BA, que mostrou alguns dados de outros locais.  
+http://santoantoniodejesus.osbrasil.org.br/  
+O desafio de Salvador-BA permance.  
