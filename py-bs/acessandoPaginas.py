@@ -10,10 +10,10 @@ init_viewState = '/wEPDwUKMTg1NDM2OTM0NQ9kFgJmD2QWAgIDD2QWCgIBD2QWCAIBDw8WAh4LTm
 init_eventValidation = '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'
 
 def pagina( viewState, eventValidation, pagina ):
-	indice = pagina%11
+	indice = ( pagina-1 )%11
 
-	if pagina > 10:
-		indice += 1
+	if pagina > 11:
+		indice += 2
 
 	print( ' ** Pagina ' + str( pagina ) + ' Indice ' + str( indice ) )
 	strIndice = str( indice )
@@ -32,7 +32,6 @@ def pagina( viewState, eventValidation, pagina ):
 	}
 
 	r = requests.post( 'http://www.cms.ba.gov.br/despesa.aspx', data=dados )
-	print( r.text )
 	parsed_html = BeautifulSoup( r.text, 'html.parser' )
 	novo_viewState = parsed_html.body.find('input', attrs={'id':'__VIEWSTATE'})["value"]
 	novo_eventValidation = parsed_html.body.find('input', attrs={'id':'__EVENTVALIDATION'})["value"]
@@ -41,16 +40,20 @@ def pagina( viewState, eventValidation, pagina ):
 	paginaAtual = paginador.find('span').text
 	tagsA = paginador.find_all('a')
 
+	contadorInteracaoPaginador = 0
+
 	for link in tagsA:
+		contadorInteracaoPaginador += 1
 		strListaPaginas += link.text + ' '
 
 		if not temProxima:
-			if link.text.isnumeric() == True & paginaAtual.isnumeric() == True & int( link.text ) > int( paginaAtual ):
+			if link.text.isnumeric() and paginaAtual.isnumeric() and int( link.text ) > int( paginaAtual ):
 				temProxima = True
 
-			elif link.text == '...':
+			elif link.text == '...' and contadorInteracaoPaginador > 2:
 				temProxima = True
 
+#	print( r.text )
 
 	return ({
 		'temMais': temProxima,
@@ -63,8 +66,8 @@ def pagina( viewState, eventValidation, pagina ):
 viewState = init_viewState
 eventValidation = init_eventValidation
 
-for pag in range( 10 ):
-	retorno = pagina( init_viewState, init_eventValidation, pag )
+for pag in range( 1, 100 ):
+	retorno = pagina( viewState, eventValidation, pag )
 
 	print( ' ** HTML ' + retorno['paginaAtual'] )
 	print( ' ** Lista ' + retorno['paginas'] )
