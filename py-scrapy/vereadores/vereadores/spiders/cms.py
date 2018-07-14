@@ -33,8 +33,12 @@ class CmsSpider(scrapy.Spider):
         )
 
         view_state = response.xpath('//*[@id="__VIEWSTATE"]').extract_first()
-        event_validation = response.xpath('//*[@id="__EVENTVALIDATION"]').extract_first()
-        actual_page = int(div_pagination.xpath('./span/text()').extract_first()) + 1
+        event_validation = response.xpath(
+            '//*[@id="__EVENTVALIDATION"]'
+        ).extract_first()
+        actual_page = int(div_pagination.xpath(
+            './span/text()'
+        ).extract_first()) + 1
 
         while self.has_next(div_pagination, actual_page):
 
@@ -47,7 +51,8 @@ class CmsSpider(scrapy.Spider):
                     'viewState': view_state,
                     'eventValidation': event_validation,
                     '__EVENTTARGET':
-                        'ctl00$ContentPlaceHolder1$dpNoticia$ctl01$ctl%s' % (actual_page + 1),
+                        'ctl00$ContentPlaceHolder1$dpNoticia$ctl01$ctl%s'
+                        % (actual_page + 1),
                         'ctl00$ContentPlaceHolder1$ToolkitScriptManager1':
                         'ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$dpNoticia$ctl01$ctl%s'
                         % (actual_page + 1)
