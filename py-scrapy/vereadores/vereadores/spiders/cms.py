@@ -20,11 +20,15 @@ class CmsSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        divs = response.xpath('//*[@id="ContentPlaceHolder1_UpdatePanel1"]/div')
+        divs_data = response.xpath(
+            '//*[@id="ContentPlaceHolder1_UpdatePanel1"]/div'
+        )
+        # div_pagination = response.xpath(
+        # '//*[@id="ContentPlaceHolder1_dpNoticia"]'
+        # )
+        clean_divs_data = self.clean_list(divs_data)
 
-        clean_divs = self.clean_list(divs)
-
-        for div in clean_divs:
+        for div in clean_divs_data:
             temp_info = div.xpath('./text()').extract()
 
             info = self.clean_line(temp_info)
