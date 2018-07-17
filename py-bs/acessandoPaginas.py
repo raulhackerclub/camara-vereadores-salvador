@@ -154,7 +154,6 @@ while True:
     break
 
     if not retorno['temMais']:
-        break
 
     dados_requisicao = {
         'pagina': retorno['paginaAtual'] + 1,
