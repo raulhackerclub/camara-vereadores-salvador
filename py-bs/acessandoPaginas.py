@@ -30,7 +30,7 @@ def indice_paginador(pagina):
 
 def pagina(params):
     r = False
-    registros = []
+    despesas = []
 
     if params:
         pagina = params['pagina']
@@ -95,11 +95,11 @@ def pagina(params):
         i += 1
 
         if len(divs_internas) - 5 < i < len(divs_internas):
-            registros.append(a.text)
+            despesas.append(a)
 
     return ({
+        'despesas': despesas,
         'temMais': tem_proxima,
-        'registros': registros,
         'paginas': strListaPaginas,
         'viewState': novo_view_state,
         'paginaAtual': pagina_atual,
@@ -107,14 +107,51 @@ def pagina(params):
     })
 
 
+def valor(dados):
+    return dados.replace('R$', '').replace('.', '').replace(',', '.').strip()
+
+
+def conteudo_de(lista, dado):
+    encontrou = False
+    texto_encontrado = ''
+
+    for texto in lista:
+        if encontrou:
+            texto_encontrado = texto
+            break
+
+        if str(texto).lower().find(dado.lower()) > -1:
+            encontrou = True
+
+    return texto_encontrado.strip()
+
+
+def processar_despesas(lista):
+    retorno = []
+
+    for despesa in lista:
+        dados = {}
+        array_dados = despesa.contents
+        dados['Data'] = conteudo_de(array_dados, 'DATA')
+        dados['Tipo'] = conteudo_de(array_dados, 'tipo')
+        dados['Responsável'] = conteudo_de(array_dados, 'Responsável')
+        dados['Usuário'] = conteudo_de(array_dados, 'Usuário')
+        dados['Valor'] = valor(conteudo_de(array_dados, 'valor'))
+        dados['Localidade'] = conteudo_de(array_dados, 'Localidade')
+        dados['Justificativa'] = conteudo_de(array_dados, 'Justificativa')
+        retorno.append(dados)
+
+    return retorno
+
 while True:
     retorno = pagina(dados_requisicao)
     paginas.append({
         'numero': retorno['paginaAtual'],
-        'registros': retorno['registros']
+        'listaDespesas': processar_despesas(retorno['despesas'])
     })
 
     print(' ** HTML ' + str(retorno['paginaAtual']))
+    break
 
     if not retorno['temMais']:
         break
