@@ -8,14 +8,14 @@ http://www.cms.ba.gov.br/despesa.aspx
 Felizmente, a comunidade está se engajando  bastante.  
 O projeto tomou fôlego e temos 3 linhas de scrapping.  
 
-* Crawler em scrapy (em progresso).  
-* Crawler com requisições diretas e Beautiful soup (funcionando).   
+* Crawler em *scrapy* (em progresso).  
+* Crawler com requisições diretas com *beautiful soup* (funcionando).   
 * Contribuições da OSB-BA (funcionando, a ser importado de outro repositório).  
    
 
 ## Cleaning 
 ### Parsing
-* Parsing dos dados para um formato estruturado (tidy) em '.csv' *(Pendente)*.  
+* Parsing dos dados para um formato estruturado (tidy) em '.csv' **(Pendente)**.  
 
 
 ## OSB
