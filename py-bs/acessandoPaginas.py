@@ -3,6 +3,9 @@
 import time
 import requests
 from bs4 import BeautifulSoup
+import sys
+
+sys.stdout = open("output_dumps", "w")
 
 paginas = []
 dados_requisicao = False
