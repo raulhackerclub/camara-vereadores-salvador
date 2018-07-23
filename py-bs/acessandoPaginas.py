@@ -111,6 +111,15 @@ def valor(dados):
     return dados.replace('R$', '').replace('.', '').replace(',', '.').strip()
 
 
+def data(dados):
+    array = dados.split('/')
+
+    if len(array) != 3:
+        return dados
+
+    return array[2]+'-'+array[1]+'-'+array[0]
+
+
 def conteudo_de(lista, dado):
     encontrou = False
     texto_encontrado = ''
@@ -132,7 +141,7 @@ def processar_despesas(lista):
     for despesa in lista:
         dados = {}
         array_dados = despesa.contents
-        dados['Data'] = conteudo_de(array_dados, 'DATA')
+        dados['Data'] = data(conteudo_de(array_dados, 'DATA'))
         dados['Tipo'] = conteudo_de(array_dados, 'tipo')
         dados['Responsável'] = conteudo_de(array_dados, 'Responsável')
         dados['Usuário'] = conteudo_de(array_dados, 'Usuário')
@@ -142,6 +151,7 @@ def processar_despesas(lista):
         retorno.append(dados)
 
     return retorno
+
 
 while True:
     retorno = pagina(dados_requisicao)
@@ -154,6 +164,7 @@ while True:
     break
 
     if not retorno['temMais']:
+        break
 
     dados_requisicao = {
         'pagina': retorno['paginaAtual'] + 1,
