@@ -1,3 +1,5 @@
 wheel    == 0.31.1
 requests == 2.19.1
 bs4      == 0.0.1
+json
+io

@@ -1,2 +1,4 @@
 *.pyc
 .idea
+despesas.json
+despesas.csv
