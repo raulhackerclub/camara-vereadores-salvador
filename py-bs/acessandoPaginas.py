@@ -1,10 +1,13 @@
 #!/usr/bin/python
 
+import io
+import json
 import time
 import requests
 from bs4 import BeautifulSoup
 
 paginas = []
+todas_despesas = []
 dados_requisicao = False
 
 
@@ -135,7 +138,7 @@ def conteudo_de(lista, dado):
     return texto_encontrado.strip()
 
 
-def processar_despesas(lista):
+def processar_despesas(lista, numero_pagina):
     retorno = []
 
     for despesa in lista:
@@ -143,28 +146,69 @@ def processar_despesas(lista):
         array_dados = despesa.contents
         dados['Data'] = data(conteudo_de(array_dados, 'DATA'))
         dados['Tipo'] = conteudo_de(array_dados, 'tipo')
-        dados['Responsável'] = conteudo_de(array_dados, 'Responsável')
-        dados['Usuário'] = conteudo_de(array_dados, 'Usuário')
+        dados['Responsavel'] = conteudo_de(array_dados, 'Responsável')
+        dados['Usuario'] = conteudo_de(array_dados, 'Usuário')
         dados['Valor'] = valor(conteudo_de(array_dados, 'valor'))
         dados['Localidade'] = conteudo_de(array_dados, 'Localidade')
         dados['Justificativa'] = conteudo_de(array_dados, 'Justificativa')
+        dados['Pagina'] = numero_pagina
         retorno.append(dados)
 
     return retorno
 
 
+def gerar_json(lista, arquivo):
+    print( ' ** Gerando '+arquivo )
+    try:
+        to_unicode = unicode
+    except NameError:
+        to_unicode = str
+
+    data = {'lista': lista}
+
+    with io.open(arquivo, 'w', encoding='utf8') as outfile:
+        str_ = json.dumps(data,
+                          indent=4, sort_keys=True,
+                          separators=(',', ': '), ensure_ascii=False)
+        outfile.write(to_unicode(str_))
+
+    with open('data.json') as data_file:
+        data_loaded = json.load(data_file)
+
+
+def format_coluna_csv(valor):
+    return str(valor).replace('\r', ' ').replace('\n', ' ').replace(';', '\\;')
+
+
+def gerar_csv(lista, arquivo):
+    print( ' ** Gerando '+arquivo )
+
+    f = open(arquivo, 'w')
+    f.write( 'Data;Valor;Tipo;Responsavel;Usuario;Localidade;Justificativa;Pagina\n' )
+
+    for despesa in lista:
+        linha = format_coluna_csv(despesa['Data'])
+        linha = linha + ';' + format_coluna_csv(despesa['Valor'])
+        linha = linha + ';' + format_coluna_csv(despesa['Tipo'])
+        linha = linha + ';' + format_coluna_csv(despesa['Responsavel'])
+        linha = linha + ';' + format_coluna_csv(despesa['Usuario'])
+        linha = linha + ';' + format_coluna_csv(despesa['Localidade'])
+        linha = linha + ';' + format_coluna_csv(despesa['Justificativa'])
+        linha = linha + ';' + format_coluna_csv(despesa['Pagina'])
+        f.write(linha+'\n')
+
+
 while True:
     retorno = pagina(dados_requisicao)
+    despesas_da_pagina = processar_despesas(retorno['despesas'], retorno['paginaAtual'])
     paginas.append({
         'numero': retorno['paginaAtual'],
-        'listaDespesas': processar_despesas(retorno['despesas'])
+        'listaDespesas': despesas_da_pagina
     })
 
-    print(' ** HTML ' + str(retorno['paginaAtual']))
-    break
+    todas_despesas = todas_despesas + despesas_da_pagina
 
-    if not retorno['temMais']:
-        break
+    print(' ** HTML ' + str(retorno['paginaAtual']))
 
     dados_requisicao = {
         'pagina': retorno['paginaAtual'] + 1,
@@ -174,4 +218,7 @@ while True:
 
     time.sleep(0.2)
 
-print(paginas)
+gerar_json(todas_despesas, 'despesas.json')
+gerar_csv(todas_despesas, 'despesas.csv')
+
+print( ' --- FIM --- ' )
