@@ -172,9 +172,6 @@ def gerar_json(lista, arquivo):
                           separators=(',', ': '), ensure_ascii=False)
         outfile.write(to_unicode(str_))
 
-    with open('data.json') as data_file:
-        data_loaded = json.load(data_file)
-
 
 def format_coluna_csv(valor):
     return str(valor).replace('\r', ' ').replace('\n', ' ').replace(';', '\\;')
@@ -209,6 +206,9 @@ while True:
     todas_despesas = todas_despesas + despesas_da_pagina
 
     print(' ** HTML ' + str(retorno['paginaAtual']))
+
+    if not retorno['temMais']:
+        break
 
     dados_requisicao = {
         'pagina': retorno['paginaAtual'] + 1,
